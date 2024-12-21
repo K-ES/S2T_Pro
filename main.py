@@ -91,16 +91,13 @@ def highlight_editor_content(event=None):
     editor_text.tag_remove("multiline_comment", "1.0", tk.END)
 
     # Подсветим строки, заканчивающиеся на AS (
-    # as_pattern = r".*AS\s*\(\s*$"
-    # as_pattern = r".*AS\s*\(\s*$"
     as_pattern = r".*AS\s*\(.*"
-    as_matches = list(re.finditer(as_pattern, content))
+    as_matches = list(re.finditer(as_pattern, content, re.IGNORECASE))
     logging.info(f"Found {len(as_matches)} lines ending with 'AS ('.")  # Логируем поиск
     for match in as_matches:
         start_index = f"1.0 + {match.start()} chars"
         end_index = f"1.0 + {match.end()} chars"
         editor_text.tag_add("cte", start_index, end_index)
-        # logging.info(f"Line ending with 'AS (': {match.group().strip()}")  # Логируем каждую найденную строку
 
     # Подсветим одно- и многострочные комментарии
     comment_pattern = r"--.*"
@@ -110,7 +107,6 @@ def highlight_editor_content(event=None):
         start_index = f"1.0 + {match.start()} chars"
         end_index = f"1.0 + {match.end()} chars"
         editor_text.tag_add("comment", start_index, end_index)
-        # logging.info(f"Single-line comment: {match.group().strip()}")  # Логируем каждую найденную строку
 
     multiline_comment_pattern = r"/\*.*?\*/"
     multiline_comment_matches = list(re.finditer(multiline_comment_pattern, content, re.DOTALL))
@@ -119,10 +115,9 @@ def highlight_editor_content(event=None):
         start_index = f"1.0 + {match.start()} chars"
         end_index = f"1.0 + {match.end()} chars"
         editor_text.tag_add("multiline_comment", start_index, end_index)
-        # logging.info(f"Multi-line comment: {match.group().strip()}")  # Логируем каждую найденную строку
 
     # Настроим стиль тегов
-    editor_text.tag_config("multiline_comment", foreground="green")
+    editor_text.tag_config("multiline_comment", foreground="red")
     editor_text.tag_config("cte",
                            foreground="blue",  # Цвет текста
                            background="lightyellow",  # Светло-желтый фон
@@ -202,8 +197,20 @@ def on_cte_click(event):
 cte_list.bind("<Double-1>", on_cte_click)
 
 # Add a text widget for editing files
-editor_text = tk.Text(editor_frame, wrap="word", font=("Courier", 10))
+editor_frame_scrollbar_vertical = tk.Scrollbar(editor_frame, orient="vertical")
+editor_frame_scrollbar_horizontal = tk.Scrollbar(editor_frame, orient="horizontal")
+
+editor_text = tk.Text(editor_frame, wrap="word", font=("Courier", 10), yscrollcommand=editor_frame_scrollbar_vertical.set, xscrollcommand=editor_frame_scrollbar_horizontal.set)
 editor_text.pack(side=tk.LEFT, expand=1, fill="both", padx=5, pady=5)
+
+# Configure the scrollbars
+editor_frame_scrollbar_vertical.config(command=editor_text.yview)
+editor_frame_scrollbar_horizontal.config(command=editor_text.xview)
+
+# Place the scrollbars in the frame
+editor_frame_scrollbar_vertical.pack(side=tk.RIGHT, fill="y")
+editor_frame_scrollbar_horizontal.pack(side=tk.BOTTOM, fill="x")
+
 editor_text.bind("<KeyRelease>", highlight_editor_content)  # Bind key release event to highlight content
 
 # Add Save button
