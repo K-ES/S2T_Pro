@@ -91,14 +91,16 @@ def highlight_editor_content(event=None):
     editor_text.tag_remove("multiline_comment", "1.0", tk.END)
 
     # Подсветим строки, заканчивающиеся на AS (
-    as_pattern = r".*AS\s*\(\s*$"
-    as_matches = list(re.finditer(as_pattern, content, re.IGNORECASE))
+    # as_pattern = r".*AS\s*\(\s*$"
+    # as_pattern = r".*AS\s*\(\s*$"
+    as_pattern = r".*AS\s*\(.*"
+    as_matches = list(re.finditer(as_pattern, content))
     logging.info(f"Found {len(as_matches)} lines ending with 'AS ('.")  # Логируем поиск
     for match in as_matches:
         start_index = f"1.0 + {match.start()} chars"
         end_index = f"1.0 + {match.end()} chars"
         editor_text.tag_add("cte", start_index, end_index)
-        logging.info(f"Line ending with 'AS (': {match.group().strip()}")  # Логируем каждую найденную строку
+        # logging.info(f"Line ending with 'AS (': {match.group().strip()}")  # Логируем каждую найденную строку
 
     # Подсветим одно- и многострочные комментарии
     comment_pattern = r"--.*"
