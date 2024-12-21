@@ -123,7 +123,11 @@ def highlight_editor_content(event=None):
 
     # Настроим стиль тегов
     editor_text.tag_config("multiline_comment", foreground="green")
-    editor_text.tag_config("cte", foreground="blue")
+    editor_text.tag_config("cte",
+                           foreground="blue",  # Цвет текста
+                           background="lightyellow",  # Светло-желтый фон
+                           borderwidth=2,  # Толщина рамки
+                           relief="solid")  # Тип рамки (solid = сплошная)
     editor_text.tag_config("comment", foreground="red")
 
     logging.info("Editor content highlighted.")  # Логируем завершение подсветки
