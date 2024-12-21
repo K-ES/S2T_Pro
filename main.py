@@ -6,20 +6,25 @@ import configparser
 import logging
 from datetime import datetime
 
-# Setup logging
+# Setup logging to use a fixed file 'log.log' and overwrite it each time
 def setup_logging():
     logs_dir = "logs"
     if not os.path.exists(logs_dir):
         os.makedirs(logs_dir)
 
-    log_filename = os.path.join(logs_dir, f"log_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
+    log_filename = os.path.join(logs_dir, "log.log")  # Фиксированное имя файла
+
+    # Устанавливаем кодировку UTF-8 для записи логов
     logging.basicConfig(
         filename=log_filename,
         level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s'
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        encoding='utf-8',  # Добавляем параметр encoding для записи в кодировке UTF-8
+        filemode='w'  # Параметр filemode='w' перезаписывает файл каждый раз
     )
-    logging.info("Logging initialized.")
+    logging.info("Logging initialized.")  # Записываем начальную информацию в лог
 
+# Initialize logging at the start of the program
 setup_logging()
 
 # Load settings from a configuration file
@@ -63,7 +68,7 @@ default_file = settings.get('default_file', '')
 def extract_lines_ending_with_as(content):
     as_line_pattern = r".*\bAS\s*\($"
     matches = list(re.finditer(as_line_pattern, content, re.IGNORECASE | re.MULTILINE))
-    logging.info(f"Extracted {len(matches)} lines ending with AS (.")
+    logging.info(f"Extracted {len(matches)} lines ending with AS (.")  # Логируем количество найденных строк
     return matches
 
 # Function to update the CTE list with lines ending with AS (
@@ -75,49 +80,57 @@ def update_cte_list():
         line_number = editor_text.index(f"1.0 + {match.start()} chars").split(".")[0]
         display_text = f"Line {line_number}: {match.group().strip()}"
         cte_list.insert(tk.END, display_text)
-    logging.info("CTE list updated with lines ending with AS (.")
+    logging.info("CTE list updated with lines ending with AS (.")  # Логируем обновление списка
 
-# Function to highlight CTEs, comments, and specific lines in the editor
 def highlight_editor_content(event=None):
     content = editor_text.get(1.0, tk.END)
 
-    # Clear existing tags
+    # Очистим существующие теги
     editor_text.tag_remove("cte", "1.0", tk.END)
     editor_text.tag_remove("comment", "1.0", tk.END)
     editor_text.tag_remove("multiline_comment", "1.0", tk.END)
 
-    # Highlight CTEs
-    cte_pattern = r"\b(with|,)?\s+([a-zA-Z_][a-zA-Z0-9_]*)\s+as\s*\("
-    for match in re.finditer(cte_pattern, content, re.IGNORECASE):
+    # Подсветим строки, заканчивающиеся на AS (
+    as_pattern = r".*AS\s*\(\s*$"
+    as_matches = list(re.finditer(as_pattern, content, re.IGNORECASE))
+    logging.info(f"Found {len(as_matches)} lines ending with 'AS ('.")  # Логируем поиск
+    for match in as_matches:
         start_index = f"1.0 + {match.start()} chars"
         end_index = f"1.0 + {match.end()} chars"
         editor_text.tag_add("cte", start_index, end_index)
+        logging.info(f"Line ending with 'AS (': {match.group().strip()}")  # Логируем каждую найденную строку
 
-    # Highlight single-line comments
+    # Подсветим одно- и многострочные комментарии
     comment_pattern = r"--.*"
-    for match in re.finditer(comment_pattern, content):
+    comment_matches = list(re.finditer(comment_pattern, content))
+    logging.info(f"Found {len(comment_matches)} single-line comments.")  # Логируем количество комментариев
+    for match in comment_matches:
         start_index = f"1.0 + {match.start()} chars"
         end_index = f"1.0 + {match.end()} chars"
         editor_text.tag_add("comment", start_index, end_index)
+        # logging.info(f"Single-line comment: {match.group().strip()}")  # Логируем каждую найденную строку
 
-    # Highlight multi-line comments
     multiline_comment_pattern = r"/\*.*?\*/"
-    for match in re.finditer(multiline_comment_pattern, content, re.DOTALL):
+    multiline_comment_matches = list(re.finditer(multiline_comment_pattern, content, re.DOTALL))
+    logging.info(f"Found {len(multiline_comment_matches)} multi-line comments.")  # Логируем количество многострочных комментариев
+    for match in multiline_comment_matches:
         start_index = f"1.0 + {match.start()} chars"
         end_index = f"1.0 + {match.end()} chars"
         editor_text.tag_add("multiline_comment", start_index, end_index)
+        # logging.info(f"Multi-line comment: {match.group().strip()}")  # Логируем каждую найденную строку
 
-    # Configure tag styles
+    # Настроим стиль тегов
+    editor_text.tag_config("multiline_comment", foreground="green")
     editor_text.tag_config("cte", foreground="blue")
     editor_text.tag_config("comment", foreground="red")
-    editor_text.tag_config("multiline_comment", foreground="red")
-    logging.info("Editor content highlighted.")
+
+    logging.info("Editor content highlighted.")  # Логируем завершение подсветки
 
 # Function to save the edited file and update the CTE list
 def save_file():
     file_path = filedialog.asksaveasfilename(defaultextension=".sql", filetypes=[("SQL Files", "*.sql"), ("All Files", "*.*")])
     if not file_path:
-        logging.warning("Save operation canceled by the user.")
+        logging.warning("Save operation canceled by the user.")  # Логируем предупреждение
         return
 
     with open(file_path, 'w', encoding='utf-8') as file:
@@ -126,18 +139,18 @@ def save_file():
 
     update_cte_list()
     highlight_editor_content()
-    logging.info(f"File saved to {file_path}.")
+    logging.info(f"File saved to {file_path}.")  # Логируем успешное сохранение
 
 # Function to open a file in the editor
 def open_file_editor(file_path):
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
             content = file.read()
-        logging.info(f"File {file_path} opened successfully.")
+        logging.info(f"File {file_path} opened successfully.")  # Логируем успешное открытие
     except UnicodeDecodeError:
         with open(file_path, 'r', encoding='windows-1251') as file:
             content = file.read()
-        logging.warning(f"File {file_path} opened with fallback encoding (windows-1251).")
+        logging.warning(f"File {file_path} opened with fallback encoding (windows-1251).")  # Логируем предупреждение о кодировке
 
     editor_text.delete(1.0, tk.END)
     editor_text.insert(tk.END, content)
@@ -196,7 +209,7 @@ if default_file:
     if os.path.exists(default_file):
         open_file_editor(default_file)
     else:
-        logging.warning(f"Default file '{default_file}' does not exist.")
+        logging.warning(f"Default file '{default_file}' does not exist.")  # Логируем, если файл не найден
 
 # Run the application
 root.mainloop()
