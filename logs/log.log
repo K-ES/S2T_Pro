@@ -1,9 +1,9 @@
-2024-12-21 08:28:42,795 - INFO - Logging initialized.
-2024-12-21 08:28:42,795 - INFO - Settings loaded successfully.
-2024-12-21 08:28:42,891 - INFO - File k:\Programming\Python\S2T_EKP\S2T\Маппинг на витрину Кредитное соглашение\DDS_ENT_AGR_COND.sql opened successfully.
-2024-12-21 08:28:42,951 - INFO - Extracted 66 lines ending with AS (.
-2024-12-21 08:28:42,963 - INFO - CTE list updated with lines ending with AS (.
-2024-12-21 08:28:42,986 - INFO - Found 72 lines ending with 'AS ('.
-2024-12-21 08:28:43,005 - INFO - Found 138 single-line comments.
-2024-12-21 08:28:43,048 - INFO - Found 73 multi-line comments.
-2024-12-21 08:28:43,066 - INFO - Editor content highlighted.
+2024-12-22 05:40:56,989 - INFO - Logging initialized.
+2024-12-22 05:40:56,990 - INFO - Settings loaded successfully.
+2024-12-22 05:40:57,093 - INFO - File k:\Programming\Python\S2T_EKP\S2T\Маппинг на витрину Кредитное соглашение\DDS_ENT_AGR_COND.sql opened successfully.
+2024-12-22 05:40:57,154 - INFO - Extracted 66 lines ending with AS (.
+2024-12-22 05:40:57,168 - INFO - CTE list updated with lines ending with AS (.
+2024-12-22 05:40:57,197 - INFO - Found 72 lines ending with 'AS ('.
+2024-12-22 05:40:57,219 - INFO - Found 138 single-line comments.
+2024-12-22 05:40:57,264 - INFO - Found 73 multi-line comments.
+2024-12-22 05:40:57,281 - INFO - Editor content highlighted.
