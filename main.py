@@ -1,3 +1,4 @@
+import src
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 import re
