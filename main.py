@@ -1,4 +1,5 @@
-import src
+# main.py
+
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 import re
@@ -7,26 +8,12 @@ import configparser
 import logging
 from datetime import datetime
 
-# Setup logging to use a fixed file 'log.log' and overwrite it each time
-def setup_logging():
-    logs_dir = "logs"
-    if not os.path.exists(logs_dir):
-        os.makedirs(logs_dir)
+# Импортируем класс Logger из файла logger.py
+from src.logger import Logger
 
-    log_filename = os.path.join(logs_dir, "log.log")  # Фиксированное имя файла
-
-    # Устанавливаем кодировку UTF-8 для записи логов
-    logging.basicConfig(
-        filename=log_filename,
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s',
-        encoding='utf-8',  # Добавляем параметр encoding для записи в кодировке UTF-8
-        filemode='w'  # Параметр filemode='w' перезаписывает файл каждый раз
-    )
-    logging.info("Logging initialized.")  # Записываем начальную информацию в лог
-
-# Initialize logging at the start of the program
-setup_logging()
+# Инициализируем логирование с использованием класса Logger
+Logger.setup_logging()  # <--- Заменяет предыдущую функцию setup_logging
+logger = logging.getLogger()  # <--- Получаем объект логгера
 
 # Load settings from a configuration file
 def load_settings():
@@ -35,7 +22,7 @@ def load_settings():
 
     # Ensure settings directory exists
     if not os.path.exists(settings_dir):
-        logging.error("Settings directory does not exist.")
+        logger.error("Settings directory does not exist.")
         messagebox.showerror("Error", "Settings directory does not exist. Please create it and add the settings.ini file.")
         raise FileNotFoundError("Settings directory is missing.")
 
@@ -48,16 +35,16 @@ def load_settings():
         }
         with open(settings_file, 'w', encoding='utf-8') as file:
             config.write(file)
-        logging.info("Default settings file created.")
+        logger.info("Default settings file created.")
 
     # Load settings from the file
     try:
         config = configparser.ConfigParser()
         config.read(settings_file, encoding='utf-8')
-        logging.info("Settings loaded successfully.")
+        logger.info("Settings loaded successfully.")
         return config['DEFAULT']
     except Exception as e:
-        logging.error(f"Failed to load settings: {e}")
+        logger.error(f"Failed to load settings: {e}")
         messagebox.showerror("Error", f"Failed to load settings: {e}")
         raise
 
@@ -69,7 +56,7 @@ default_file = settings.get('default_file', '')
 def extract_lines_ending_with_as(content):
     as_line_pattern = r".*\bAS\s*\($"
     matches = list(re.finditer(as_line_pattern, content, re.IGNORECASE | re.MULTILINE))
-    logging.info(f"Extracted {len(matches)} lines ending with AS (.")  # Логируем количество найденных строк
+    logger.info(f"Extracted {len(matches)} lines ending with AS (.")
     return matches
 
 # Function to update the CTE list with lines ending with AS (
@@ -81,7 +68,7 @@ def update_cte_list():
         line_number = editor_text.index(f"1.0 + {match.start()} chars").split(".")[0]
         display_text = f"Line {line_number}: {match.group().strip()}"
         cte_list.insert(tk.END, display_text)
-    logging.info("CTE list updated with lines ending with AS (.")  # Логируем обновление списка
+    logger.info("CTE list updated with lines ending with AS (.")
 
 def highlight_editor_content(event=None):
     content = editor_text.get(1.0, tk.END)
@@ -94,7 +81,7 @@ def highlight_editor_content(event=None):
     # Подсветим строки, заканчивающиеся на AS (
     as_pattern = r".*AS\s*\(.*"
     as_matches = list(re.finditer(as_pattern, content, re.IGNORECASE))
-    logging.info(f"Found {len(as_matches)} lines ending with 'AS ('.")  # Логируем поиск
+    logger.info(f"Found {len(as_matches)} lines ending with 'AS ('.")
     for match in as_matches:
         start_index = f"1.0 + {match.start()} chars"
         end_index = f"1.0 + {match.end()} chars"
@@ -103,7 +90,7 @@ def highlight_editor_content(event=None):
     # Подсветим одно- и многострочные комментарии
     comment_pattern = r"--.*"
     comment_matches = list(re.finditer(comment_pattern, content))
-    logging.info(f"Found {len(comment_matches)} single-line comments.")  # Логируем количество комментариев
+    logger.info(f"Found {len(comment_matches)} single-line comments.")
     for match in comment_matches:
         start_index = f"1.0 + {match.start()} chars"
         end_index = f"1.0 + {match.end()} chars"
@@ -111,7 +98,7 @@ def highlight_editor_content(event=None):
 
     multiline_comment_pattern = r"/\*.*?\*/"
     multiline_comment_matches = list(re.finditer(multiline_comment_pattern, content, re.DOTALL))
-    logging.info(f"Found {len(multiline_comment_matches)} multi-line comments.")  # Логируем количество многострочных комментариев
+    logger.info(f"Found {len(multiline_comment_matches)} multi-line comments.")
     for match in multiline_comment_matches:
         start_index = f"1.0 + {match.start()} chars"
         end_index = f"1.0 + {match.end()} chars"
@@ -126,13 +113,14 @@ def highlight_editor_content(event=None):
                            relief="solid")  # Тип рамки (solid = сплошная)
     editor_text.tag_config("comment", foreground="red")
 
-    logging.info("Editor content highlighted.")  # Логируем завершение подсветки
+    logger.info("Editor content highlighted.")
+    update_cte_list()
 
 # Function to save the edited file and update the CTE list
 def save_file():
     file_path = filedialog.asksaveasfilename(defaultextension=".sql", filetypes=[("SQL Files", "*.sql"), ("All Files", "*.*")])
     if not file_path:
-        logging.warning("Save operation canceled by the user.")  # Логируем предупреждение
+        logger.warning("Save operation canceled by the user.")
         return
 
     with open(file_path, 'w', encoding='utf-8') as file:
@@ -141,18 +129,18 @@ def save_file():
 
     update_cte_list()
     highlight_editor_content()
-    logging.info(f"File saved to {file_path}.")  # Логируем успешное сохранение
+    logger.info(f"File saved to {file_path}.")
 
 # Function to open a file in the editor
 def open_file_editor(file_path):
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
             content = file.read()
-        logging.info(f"File {file_path} opened successfully.")  # Логируем успешное открытие
+        logger.info(f"File {file_path} opened successfully.")  # Логируем успешное открытие
     except UnicodeDecodeError:
         with open(file_path, 'r', encoding='windows-1251') as file:
             content = file.read()
-        logging.warning(f"File {file_path} opened with fallback encoding (windows-1251).")  # Логируем предупреждение о кодировке
+        logger.warning(f"File {file_path} opened with fallback encoding (windows-1251).")  # Логируем предупреждение о кодировке
 
     editor_text.delete(1.0, tk.END)
     editor_text.insert(tk.END, content)
@@ -223,7 +211,7 @@ if default_file:
     if os.path.exists(default_file):
         open_file_editor(default_file)
     else:
-        logging.warning(f"Default file '{default_file}' does not exist.")  # Логируем, если файл не найден
+        logger.warning(f"Default file '{default_file}' does not exist.")  # Логируем, если файл не найден
 
 # Run the application
 root.mainloop()
