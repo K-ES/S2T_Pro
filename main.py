@@ -5,14 +5,10 @@ from tkinter import filedialog, messagebox, ttk
 import re
 import os
 import configparser
-import logging
-from datetime import datetime
-
-# Импортируем класс Logger из файла logger.py
 from src.logger import Logger
+import logging
 
-# Инициализируем логирование с использованием класса Logger
-Logger.setup_logging()  # <--- Заменяет предыдущую функцию setup_logging
+Logger.setup_logging()
 logger = logging.getLogger()  # <--- Получаем объект логгера
 
 # Load settings from a configuration file
