@@ -1,3 +1,4 @@
+2024.12.25 05:57:00 added example
 2024.12.23 07:39:48 moved logger to separate class
 2024.12.22 06:48:48 development of project architecture
 2024.12.22 06:29:04 studying virtual environment
