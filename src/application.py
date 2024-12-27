@@ -1,5 +1,5 @@
 import tkinter as tk
-from src.app_gui import AppGUI  # Импортируем интерфейс из другого файла
+from src.gui import AppGUI  # Импортируем интерфейс из другого файла
 
 class Application:
     """

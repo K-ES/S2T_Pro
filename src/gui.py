@@ -1,34 +1,19 @@
+# src/app_gui.py
 import tkinter as tk
-from src.custom_logger import CustomLogger  # Импортируем CustomLogger
 
-# Класс Application назван так, потому что в контексте GUI-программирования
-# и в рамках большинства примеров на Python с использованием Tkinter,
-# Application — это более общий и часто используемый термин для класса,
-# который отвечает за создание и управление графическим интерфейсом.
-class Application:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("My Application")
-        self.root.geometry("300x200")
+class AppGUI:
+    """
+    Класс для управления интерфейсной частью приложения (Tkinter).
+    """
+    def __init__(self, root, on_button_click):
+        self.root = root  # Главное окно Tkinter
+        self.on_button_click = on_button_click
+        self.setup_ui()  # Настроим интерфейс
 
-        # Инициализация логгера
-        self.logger = CustomLogger(log_file='logs/app.log')
-
-        # Кнопка
+    def setup_ui(self):
+        """
+        Метод для создания всех виджетов интерфейса.
+        """
+        self.root.title("Tkinter Application")  # Заголовок окна
         self.button = tk.Button(self.root, text="Click Me", command=self.on_button_click)
-        self.button.pack(pady=50)
-
-        # Логируем запуск приложения
-        self.logger.log("Application started")
-
-    def on_button_click(self):
-        """Обработчик нажатия кнопки."""
-        self.logger.log("Button clicked")  # Логируем нажатие кнопки
-        print("Button clicked!")
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = Application(root)
-    root.mainloop()
-
-print(123)
+        self.button.pack(pady=50)  # Размещаем кнопку
