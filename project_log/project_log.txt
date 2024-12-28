@@ -1,3 +1,4 @@
+
 2024.12.25 08:54:00 changed logging. created custom_logging
 2024.12.25 05:57:00 added example
 2024.12.23 07:39:48 moved logger to separate class
