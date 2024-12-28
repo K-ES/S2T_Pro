@@ -3,12 +3,27 @@
 import logging
 import os
 
+
 class CustomLogger:
+    _instance = None  # Статический атрибут для хранения единственного экземпляра
+
+    def __new__(cls, log_file='logs/log.log', log_level=logging.INFO):
+        """
+        Метод для создания (или получения) единственного экземпляра логгера.
+        """
+        if not cls._instance:
+            cls._instance = super(CustomLogger, cls).__new__(cls)
+            cls._instance.__init__(log_file, log_level)
+        return cls._instance
+
     def __init__(self, log_file='logs/log.log', log_level=logging.INFO):
         """
         Инициализация логгера. Создает директорию 'logs' (если она не существует) и
         настраивает логирование на уровне log_level. Логи будут записываться в файл log_file.
         """
+        if hasattr(self, 'logger'):  # Если логгер уже инициализирован, пропускаем повторную инициализацию
+            return
+
         self.log_file = log_file
         self.log_level = log_level
         self.setup_logging()
