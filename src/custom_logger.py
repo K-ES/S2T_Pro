@@ -5,7 +5,7 @@ import os
 
 
 class CustomLogger:
-    _instance = None  # Статический атрибут для хранения единственного экземпляра.
+    _instance = None  #   Статический атрибут для хранения единственного экземпляра.
 
     def __new__(cls, log_file='logs/log.log', log_level=logging.INFO):
         """
