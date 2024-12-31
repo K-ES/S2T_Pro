@@ -1,3 +1,6 @@
+# 2024-12-31, Kes, Initial version with color-coded logging and singleton pattern
+#                  ChatGPT https://chatgpt.com/share/67738dc8-c13c-8012-bff3-5ee7528e6e72
+
 import logging
 import os
 from typing import Optional
@@ -8,8 +11,8 @@ from typing import Optional
 # Class attributes: _instance, log_file, log_level, logger
 # (RU) Атрибуты класса: _instance, log_file, log_level, logger
 
-# Methods: __new__, __init__, setup_logging, log, add_gui_handler
-# (RU) Методы: __new__, __init__, setup_logging, log, add_gui_handler
+# Methods: __new__, __init__, setup_logging, log, add_gui_handler, set_log_level, test_logs
+# (RU) Методы: __new__, __init__, setup_logging, log, add_gui_handler, set_log_level, test_logs
 
 # Constants
 # (RU) Константы
@@ -95,27 +98,15 @@ class CustomLogger:
             console_handler.setLevel(self.log_level)
             self.logger.addHandler(console_handler)
 
-            # Apply the formatter to the file handler
-            # (RU) Устанавливаем форматтер для обработчика файла
-            file_handler.setFormatter(FORMATTER)
-            self.logger.addHandler(file_handler)
-
-            # Create a handler to output logs to the console
-            # (RU) Создаём обработчик для вывода логов в консоль
-            console_handler: logging.StreamHandler = logging.StreamHandler()
-            console_handler.setLevel(self.log_level)
-            console_handler.setFormatter(FORMATTER)
-            self.logger.addHandler(console_handler)
-
-    def add_gui_handler(self, gui_handler: logging.Handler) -> None:
+    def _add_handler(self, handler: logging.Handler) -> None:
         """
-        Adds a handler for GUI logging.
-        :param gui_handler: An instance of a class that inherits from logging.Handler
+        Helper method to add a handler with the predefined formatter and log level.
 
-        (RU) Добавляет обработчик для GUI.
-        :param gui_handler: экземпляр класса, наследующего от logging.Handler
+        (RU) Вспомогательный метод для добавления обработчика с заданным форматтером и уровнем логирования.
         """
-        self.logger.addHandler(gui_handler)
+        handler.setLevel(self.log_level)
+        handler.setFormatter(FORMATTER)
+        self.logger.addHandler(handler)
 
     def log(self, message: str, level: int = logging.INFO) -> None:
         """
@@ -137,3 +128,45 @@ class CustomLogger:
             self.logger.critical(message)
         else:
             self.logger.log(level, message)
+
+    def add_gui_handler(self, gui_handler: logging.Handler) -> None:
+        """
+        Adds a handler for GUI logging.
+        :param gui_handler: An instance of a class that inherits from logging.Handler
+
+        (RU) Добавляет обработчик для GUI.
+        :param gui_handler: экземпляр класса, наследующего от logging.Handler
+        """
+        self._add_handler(gui_handler)
+
+    def set_log_level(self, log_level: int) -> None:
+        """
+        Dynamically change the log level for all handlers.
+
+        (RU) Динамически изменяет уровень логирования для всех обработчиков.
+        :param log_level: Новый уровень логирования
+        """
+        self.log_level = log_level
+        self.logger.setLevel(log_level)
+        for handler in self.logger.handlers:
+            handler.setLevel(log_level)
+
+    def test_logs(self) -> None:
+        """
+        Test the logger by logging messages at all levels.
+
+        (RU) Тестирует логгер, логируя сообщения на всех уровнях.
+        """
+        self.log("Test INFO message", logging.INFO)
+        self.log("Test WARNING message", logging.WARNING)
+        self.log("Test ERROR message", logging.ERROR)
+        self.log("Test DEBUG message", logging.DEBUG)
+        self.log("Test CRITICAL message", logging.CRITICAL)
+
+# Example usage
+# (RU) Пример использования
+if __name__ == "__main__":
+    logger = CustomLogger()
+    logger.test_logs()
+    logger.set_log_level(logging.DEBUG)
+    logger.log("This is a debug message", logging.DEBUG)
