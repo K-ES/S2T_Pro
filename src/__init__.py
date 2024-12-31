@@ -1,1 +1,1 @@
-print('src.init')
+print(f"Package {__name__} initialized")

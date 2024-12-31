@@ -17,10 +17,29 @@ LOG_FILE: str = 'logs/log.log'
 LOG_LEVEL: int = logging.INFO
 FORMATTER: logging.Formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 
+class CustomColorFormatter(logging.Formatter):
+    """
+    Custom formatter to add colors to console log messages based on their level.
+
+    (RU) Кастомный форматтер для добавления цветов к сообщениям в консоли в зависимости от уровня.
+    """
+    COLORS = {
+        logging.DEBUG: "\033[1;94;40m",  # Bold Blue with Black background
+        logging.INFO: "\033[1;92;45m",   # Bold Green with Magenta background
+        logging.WARNING: "\033[1;93;41m",# Bold Yellow with Red background
+        logging.ERROR: "\033[1;91;43m",  # Bold Red with Yellow background
+        logging.CRITICAL: "\033[1;95;44m"# Bold Magenta with Blue background
+    }
+    RESET = "\033[0m"
+
+    def format(self, record: logging.LogRecord) -> str:
+        level_color = self.COLORS.get(record.levelno, self.RESET)
+        record.msg = f"{level_color}{record.msg}{self.RESET}"
+        return super().format(record)
 
 class CustomLogger:
     _instance: Optional['CustomLogger'] = None  # Static attribute to hold the single instance of the logger.
-                                                  # (RU) Статический атрибут, содержащий единственный экземпляр логгера.
+                                                # (RU) Статический атрибут, содержащий единственный экземпляр логгера.
 
     def __new__(cls, log_file: str = LOG_FILE, log_level: int = LOG_LEVEL) -> 'CustomLogger':
         """
@@ -30,25 +49,19 @@ class CustomLogger:
         """
         if not cls._instance:
             cls._instance = super(CustomLogger, cls).__new__(cls)
-            cls._instance.__init__(log_file, log_level)
+            cls._instance.setup_logging(log_file, log_level)
+        print(f"Logger initialized with __name__: {__name__}")  # Display module name in the console
         return cls._instance
 
-    def __init__(self, log_file: str = LOG_FILE, log_level: int = LOG_LEVEL) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         """
-        Initialize the logger. Creates 'logs' directory if it doesn't exist,
-        and sets up logging at the specified log_level. Logs will be written to log_file.
+        Prevent reinitialization of the singleton instance.
 
-        (RU) Инициализирует логгер. Создаёт директорию 'logs', если она не существует,
-        и настраивает уровень логирования. Сообщения будут записаны в log_file.
+        (RU) Предотвращает повторную инициализацию единственного экземпляра.
         """
-        if hasattr(self, 'logger'):  # Skip re-initializing if the logger is already set up
-                                      # (RU) Пропустить повторную инициализацию, если логгер уже настроен
-            return
-        self.log_file: str = log_file
-        self.log_level: int = log_level
-        self.setup_logging()
+        pass
 
-    def setup_logging(self) -> None:
+    def setup_logging(self, log_file: str = LOG_FILE, log_level: int = LOG_LEVEL) -> None:
         """
         Set up logging by creating the logs directory (if it doesn't exist)
         and configuring the logger with the specified settings.
@@ -56,20 +69,31 @@ class CustomLogger:
         (RU) Настраивает логирование: создаёт директорию для логов (если нет),
         и конфигурирует логгер с нужными параметрами.
         """
-        logs_dir: str = os.path.dirname(self.log_file)
+        self.log_file = log_file
+        self.log_level = log_level
+        self.logger = logging.getLogger(self.__class__.__name__)  # Logger name is the class name
+        self.logger.setLevel(log_level)
+
+        # Create the logs directory if it doesn't exist
+        # (RU) Создаёт директорию для логов, если она не существует
+        logs_dir = os.path.dirname(self.log_file)
         if not os.path.exists(logs_dir):
             os.makedirs(logs_dir)
 
-        self.logger: logging.Logger = logging.getLogger()  # Используем корневой логгер
-        self.logger.setLevel(self.log_level)  # Use the log level passed during initialization
-                                              # (RU) Использовать уровень логирования, переданный при инициализации
-
-        # Проверяем, добавлены ли уже обработчики, чтобы избежать дублирования
-        if not self.logger.hasHandlers():
-            # Create a handler to write logs to a file
-            # (RU) Создаём обработчик для записи логов в файл
-            file_handler: logging.FileHandler = logging.FileHandler(self.log_file)
+        if not self.logger.handlers:
+            # Add file handler
+            # (RU) Добавляет обработчик для записи логов в файл
+            file_handler = logging.FileHandler(self.log_file)
+            file_handler.setFormatter(FORMATTER)
             file_handler.setLevel(self.log_level)
+            self.logger.addHandler(file_handler)
+
+            # Add console handler with color formatting
+            # (RU) Добавляет обработчик для вывода логов в консоль с цветами
+            console_handler = logging.StreamHandler()
+            console_handler.setFormatter(CustomColorFormatter('%(asctime)s - %(levelname)s - %(message)s'))
+            console_handler.setLevel(self.log_level)
+            self.logger.addHandler(console_handler)
 
             # Apply the formatter to the file handler
             # (RU) Устанавливаем форматтер для обработчика файла
