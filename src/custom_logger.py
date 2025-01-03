@@ -27,12 +27,13 @@ class CustomColorFormatter(logging.Formatter):
     (RU) Кастомный форматтер для добавления цветов к сообщениям в консоли в зависимости от уровня.
     """
     COLORS = {
-        logging.DEBUG: "\033[1;94;40m",  # Bold Blue with Black background
-        logging.INFO: "\033[1;92;45m",   # Bold Green with Magenta background
-        logging.WARNING: "\033[1;93;41m",# Bold Yellow with Red background
-        logging.ERROR: "\033[1;91;43m",  # Bold Red with Yellow background
-        logging.CRITICAL: "\033[1;95;44m"# Bold Magenta with Blue background
+        logging.DEBUG: "\033[0;37;40m",  # Серый текст на черном фоне
+        logging.INFO: "\033[0;32;40m",  # Зеленый текст на черном фоне
+        logging.WARNING: "\033[0;33;40m",  # Желтый текст на черном фоне
+        logging.ERROR: "\033[1;31;40m",  # Жирный красный текст на черном фоне
+        logging.CRITICAL: "\033[1;97;41m"  # Белый текст на красном фоне (чтобы критические ошибки были видны)
     }
+
     RESET = "\033[0m"
 
     def format(self, record: logging.LogRecord) -> str:
