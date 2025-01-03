@@ -1,25 +1,54 @@
-2024-12-31 08:00:37,201 - INFO - Test INFO message
-2024-12-31 08:00:37,201 - WARNING - Test WARNING message
-2024-12-31 08:00:37,201 - ERROR - Test ERROR message
-2024-12-31 08:00:37,201 - CRITICAL - Test CRITICAL message
-2024-12-31 08:00:37,201 - DEBUG - This is a debug message
-2024-12-31 08:00:43,323 - INFO - Test INFO message
-2024-12-31 08:00:43,323 - WARNING - Test WARNING message
-2024-12-31 08:00:43,323 - ERROR - Test ERROR message
-2024-12-31 08:00:43,323 - CRITICAL - Test CRITICAL message
-2024-12-31 08:00:43,323 - DEBUG - This is a debug message
-2024-12-31 08:09:52,513 - INFO - Test INFO message
-2024-12-31 08:09:52,513 - WARNING - Test WARNING message
-2024-12-31 08:09:52,513 - ERROR - Test ERROR message
-2024-12-31 08:09:52,513 - CRITICAL - Test CRITICAL message
-2024-12-31 08:09:52,514 - DEBUG - This is a debug message
-2024-12-31 08:12:50,862 - INFO - Test INFO message
-2024-12-31 08:12:50,862 - WARNING - Test WARNING message
-2024-12-31 08:12:50,862 - ERROR - Test ERROR message
-2024-12-31 08:12:50,862 - CRITICAL - Test CRITICAL message
-2024-12-31 08:12:50,862 - DEBUG - This is a debug message
-2024-12-31 08:20:17,756 - INFO - Test INFO message
-2024-12-31 08:20:17,756 - WARNING - Test WARNING message
-2024-12-31 08:20:17,756 - ERROR - Test ERROR message
-2024-12-31 08:20:17,756 - CRITICAL - Test CRITICAL message
-2024-12-31 08:20:17,756 - DEBUG - This is a debug message
+2025-01-03 06:02:58,898 - INFO - Test INFO message (custom_logger.py:124)
+2025-01-03 06:02:58,898 - WARNING - Test WARNING message (custom_logger.py:126)
+2025-01-03 06:02:58,898 - ERROR - Test ERROR message (custom_logger.py:128)
+2025-01-03 06:02:58,898 - CRITICAL - Test CRITICAL message (custom_logger.py:130)
+2025-01-03 06:02:58,898 - DEBUG - This is a debug message (custom_logger.py:122)
+2025-01-03 06:03:04,412 - INFO - Test INFO message (custom_logger.py:124)
+2025-01-03 06:03:04,412 - WARNING - Test WARNING message (custom_logger.py:126)
+2025-01-03 06:03:04,412 - ERROR - Test ERROR message (custom_logger.py:128)
+2025-01-03 06:03:04,425 - CRITICAL - Test CRITICAL message (custom_logger.py:130)
+2025-01-03 06:03:04,425 - DEBUG - This is a debug message (custom_logger.py:122)
+2025-01-03 06:05:06,650 - INFO - Test INFO message (custom_logger.py:124)
+2025-01-03 06:05:06,650 - WARNING - Test WARNING message (custom_logger.py:126)
+2025-01-03 06:05:06,651 - ERROR - Test ERROR message (custom_logger.py:128)
+2025-01-03 06:05:06,651 - CRITICAL - Test CRITICAL message (custom_logger.py:130)
+2025-01-03 06:08:53,400 - INFO - Test INFO message (custom_logger.py:163)
+2025-01-03 06:08:53,400 - WARNING - Test WARNING message (custom_logger.py:164)
+2025-01-03 06:08:53,400 - ERROR - Test ERROR message (custom_logger.py:165)
+2025-01-03 06:08:53,400 - CRITICAL - Test CRITICAL message (custom_logger.py:167)
+2025-01-03 06:09:01,586 - INFO - Test INFO message (custom_logger.py:163)
+2025-01-03 06:09:01,587 - WARNING - Test WARNING message (custom_logger.py:164)
+2025-01-03 06:09:01,587 - ERROR - Test ERROR message (custom_logger.py:165)
+2025-01-03 06:09:01,587 - CRITICAL - Test CRITICAL message (custom_logger.py:167)
+2025-01-03 06:10:10,179 - INFO - Test INFO message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:167) (custom_logger.py:125)
+2025-01-03 06:10:10,180 - WARNING - Test WARNING message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:168) (custom_logger.py:125)
+2025-01-03 06:10:10,180 - ERROR - Test ERROR message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:169) (custom_logger.py:125)
+2025-01-03 06:10:10,180 - CRITICAL - Test CRITICAL message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:171) (custom_logger.py:125)
+2025-01-03 06:11:04,218 - INFO - Test INFO message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:166) (custom_logger.py:124)
+2025-01-03 06:11:04,219 - WARNING - Test WARNING message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:167) (custom_logger.py:124)
+2025-01-03 06:11:04,219 - ERROR - Test ERROR message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:168) (custom_logger.py:124)
+2025-01-03 06:11:04,219 - CRITICAL - Test CRITICAL message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:170) (custom_logger.py:124)
+2025-01-03 06:11:46,615 - INFO - Test INFO message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:169) (custom_logger.py:127)
+2025-01-03 06:11:46,628 - WARNING - Test WARNING message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:170) (custom_logger.py:127)
+2025-01-03 06:11:46,628 - ERROR - Test ERROR message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:171) (custom_logger.py:127)
+2025-01-03 06:11:46,628 - CRITICAL - Test CRITICAL message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:173) (custom_logger.py:127)
+2025-01-03 06:12:15,705 - INFO - Test INFO message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:170) (custom_logger.py:128)
+2025-01-03 06:12:15,705 - WARNING - Test WARNING message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:171) (custom_logger.py:128)
+2025-01-03 06:12:15,705 - ERROR - Test ERROR message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:172) (custom_logger.py:128)
+2025-01-03 06:12:15,705 - CRITICAL - Test CRITICAL message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:174) (custom_logger.py:128)
+2025-01-03 06:12:51,317 INFO Test INFO message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:170) (custom_logger.py:128)
+2025-01-03 06:12:51,317 WARNING Test WARNING message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:171) (custom_logger.py:128)
+2025-01-03 06:12:51,317 ERROR Test ERROR message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:172) (custom_logger.py:128)
+2025-01-03 06:12:51,317 CRITICAL Test CRITICAL message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:174) (custom_logger.py:128)
+2025-01-03 06:13:25,702 INFO Test INFO message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:170) (custom_logger.py:128)
+2025-01-03 06:13:25,702 WARNING Test WARNING message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:171) (custom_logger.py:128)
+2025-01-03 06:13:25,702 ERROR Test ERROR message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:172) (custom_logger.py:128)
+2025-01-03 06:13:25,702 CRITICAL Test CRITICAL message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:174) (custom_logger.py:128)
+2025-01-03 06:14:32,417 INFO Test INFO message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:170) (custom_logger.py:128)
+2025-01-03 06:14:32,417 WARNING Test WARNING message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:171) (custom_logger.py:128)
+2025-01-03 06:14:32,417 ERROR Test ERROR message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:172) (custom_logger.py:128)
+2025-01-03 06:14:32,417 CRITICAL Test CRITICAL message (K:\Programming\Python\Git\S2T_Pro\src\custom_logger.py:174) (custom_logger.py:128)
+2025-01-03 06:15:43,101 INFO Test INFO message (custom_logger.py:163)
+2025-01-03 06:15:43,102 WARNING Test WARNING message (custom_logger.py:164)
+2025-01-03 06:15:43,102 ERROR Test ERROR message (custom_logger.py:165)
+2025-01-03 06:15:43,102 CRITICAL Test CRITICAL message (custom_logger.py:167)

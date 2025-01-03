@@ -1,3 +1,5 @@
+# 2024-12-31, Kes, Initial version
+
 import logging
 from src.application import Application
 from src.custom_logger import CustomLogger  # Импортируем CustomLogger

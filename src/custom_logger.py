@@ -1,9 +1,12 @@
 # 2024-12-31, Kes, Initial version with color-coded logging and singleton pattern
 #                  ChatGPT https://chatgpt.com/share/67738dc8-c13c-8012-bff3-5ee7528e6e72
+# 2025-01-03, Logging adjustments https://chatgpt.com/share/6777667b-ad08-8012-8044-21aa61ba92b5
+
 
 import logging
 import os
 from typing import Optional
+import inspect
 
 # Static attributes: LOG_FILE, LOG_LEVEL, FORMATTER
 # (RU) Статические атрибуты: LOG_FILE, LOG_LEVEL, FORMATTER
@@ -18,28 +21,32 @@ from typing import Optional
 # (RU) Константы
 LOG_FILE: str = 'logs/log.log'
 LOG_LEVEL: int = logging.INFO
-FORMATTER: logging.Formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+FORMATTER: logging.Formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s (%(filename)s:%(lineno)d)')
+
 
 class CustomColorFormatter(logging.Formatter):
     """
     Custom formatter to add colors to console log messages based on their level.
-
-    (RU) Кастомный форматтер для добавления цветов к сообщениям в консоли в зависимости от уровня.
     """
     COLORS = {
-        logging.DEBUG: "\033[0;37;40m",  # Серый текст на черном фоне
-        logging.INFO: "\033[0;32;40m",  # Зеленый текст на черном фоне
-        logging.WARNING: "\033[0;33;40m",  # Желтый текст на черном фоне
-        logging.ERROR: "\033[1;31;40m",  # Жирный красный текст на черном фоне
-        logging.CRITICAL: "\033[1;97;41m"  # Белый текст на красном фоне (чтобы критические ошибки были видны)
+        logging.DEBUG: "\033[0;37m",  # Серый текст
+        logging.INFO: "\033[0;32m",  # Зеленый текст
+        logging.WARNING: "\033[0;33m",  # Желтый текст
+        logging.ERROR: "\033[0;31m",  # Красный текст
+        logging.CRITICAL: "\033[1;31m"  # Жирный красный текст
     }
 
     RESET = "\033[0m"
 
     def format(self, record: logging.LogRecord) -> str:
+        # Форматируем уровень логирования так, чтобы занимал 8 символов и заключаем в квадратные скобки
+        record.levelname = f"[{record.levelname:<8}]"
+        formatted_message = super().format(record)
         level_color = self.COLORS.get(record.levelno, self.RESET)
-        record.msg = f"{level_color}{record.msg}{self.RESET}"
-        return super().format(record)
+        return f"{level_color}{formatted_message}{self.RESET}"
+
+
+
 
 class CustomLogger:
     _instance: Optional['CustomLogger'] = None  # Static attribute to hold the single instance of the logger.
@@ -95,7 +102,7 @@ class CustomLogger:
             # Add console handler with color formatting
             # (RU) Добавляет обработчик для вывода логов в консоль с цветами
             console_handler = logging.StreamHandler()
-            console_handler.setFormatter(CustomColorFormatter('%(asctime)s - %(levelname)s - %(message)s'))
+            console_handler.setFormatter(CustomColorFormatter(FORMATTER._fmt))
             console_handler.setLevel(self.log_level)
             self.logger.addHandler(console_handler)
 
@@ -112,23 +119,8 @@ class CustomLogger:
     def log(self, message: str, level: int = logging.INFO) -> None:
         """
         Logs a message at the specified log level.
-
-        (RU) Логирует сообщение на указанном уровне логирования.
-        :param message: Сообщение для логирования
-        :param level: Уровень логирования
         """
-        if level == logging.DEBUG:
-            self.logger.debug(message)
-        elif level == logging.INFO:
-            self.logger.info(message)
-        elif level == logging.WARNING:
-            self.logger.warning(message)
-        elif level == logging.ERROR:
-            self.logger.error(message)
-        elif level == logging.CRITICAL:
-            self.logger.critical(message)
-        else:
-            self.logger.log(level, message)
+        self.logger.log(level, message, stacklevel=2)  # Даем логгеру самому обрабатывать вывод
 
     def add_gui_handler(self, gui_handler: logging.Handler) -> None:
         """
@@ -168,6 +160,10 @@ class CustomLogger:
 # (RU) Пример использования
 if __name__ == "__main__":
     logger = CustomLogger()
-    logger.test_logs()
-    logger.set_log_level(logging.DEBUG)
-    logger.log("This is a debug message", logging.DEBUG)
+
+    # Прямые вызовы логов с разных уровней
+    logger.log("Test INFO message", logging.INFO)  # Должна показать номер этой строки
+    logger.log("Test WARNING message", logging.WARNING)
+    logger.log("Test ERROR message", logging.ERROR)
+    logger.log("Test DEBUG message", logging.DEBUG)
+    logger.log("Test CRITICAL message", logging.CRITICAL)
